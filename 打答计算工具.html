@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 添加视口元标签，用于响应式布局 -->
+    <title>打答计算工具</title>
+    <style>
+        /* 简单的响应式样式 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 水平居中 */
+            justify-content: flex-start; /* 顶部对齐 */
+            padding: 30px;
+            box-sizing: border-box;
+            height: 100vh; /* 使用高度百分比填充整个视口 */
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        /* 输入框和按钮在小屏设备上堆叠显示 */
+        @media screen and (max-width: 600px) {
+            input[type="text"], input[type="number"], button {
+                width: calc(100% - 20px); /* 让输入框和按钮的宽度为父容器的宽度减去一些边距 */
+                margin-bottom: 10px;
+                padding: 12px; /* 添加一些内边距 */
+                font-size: 16px; /* 调整字体大小 */
+            }
+
+            button {
+                font-size: 18px; /* 调整按钮的字体大小 */
+            }
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 20px; /* 调整结果字体大小 */
+            white-space: pre-line; /* 自动换行 */
+        }
+    </style>
+</head>
+<body>
+
+<h2>请输入4个靓仔的分数，</h2>
+<h2>用空格隔开：</h2>
+<input type="text" id="scoresInput" placeholder="注意用空格隔开">
+<h2>请输入每一分多少钱：</h2>
+<input type="number" id="scoreValueInput" placeholder="请输入每一分多少钱：">
+<button onclick="calculateScores()">计算结果</button>
+<p id="result"></p>
+
+<script>
+    function calculateScores() {
+        var scoresInput = document.getElementById('scoresInput').value.trim();
+        var scoreValuesInput = document.getElementById('scoreValueInput').value.trim();
+        
+        var scores = scoresInput.split(' ').map(Number);
+        if (scores.length !== 4) {
+            alert('请确保您输入了4个分数，并用空格隔开！');
+            return;
+        }
+        
+        var scoreValue = Number(scoreValuesInput);
+        if (isNaN(scoreValue)) {
+            alert('请输入有效的每一分对应的金额！');
+            return;
+        }
+        
+        var total = scores.reduce((a, b) => a + b, 0);
+        var rawResults = scores.map(score => score * 4 - total);
+        var moneyResults = rawResults.map(result => parseFloat((-result * scoreValue).toFixed(2)));
+        
+        document.getElementById('result').textContent = "这4位靓仔的输赢情况为：\n" + moneyResults.join('，');
+    }
+</script>
+
+</body>
+</html>
